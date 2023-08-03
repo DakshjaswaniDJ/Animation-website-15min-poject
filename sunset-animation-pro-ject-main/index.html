@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sun"></div>
+    <div class="moon"></div>
+    <img width="100%" src="img/building.png" alt="">
+    <canvas id="starsCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('starsCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const numStars = 200;
+
+        const stars = [];
+
+        for (let i = 0; i < numStars; i++) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const radius = Math.random() * 2;
+
+            stars.push({
+                x,
+                y,
+                radius,
+                opacity: Math.random(),
+                fadeIn: true
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (const star of stars) {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.fill();
+
+                star.opacity += star.fadeIn ? 0.005 : -0.005;
+
+                if (star.opacity > 1) {
+                    star.opacity = 1;
+                    star.fadeIn = false;
+                } else if (star.opacity < 0) {
+                    star.opacity = 0;
+                    star.fadeIn = true;
+                }
+            }
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+</body>
+</html>
